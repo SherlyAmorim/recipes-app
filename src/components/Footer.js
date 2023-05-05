@@ -11,9 +11,9 @@ function Footer() {
     history.push('/drinks');
   }, [history]);
 
-  const onMealClick = () => {
+  const onMealClick = useCallback(() => {
     history.push('/meals');
-  };
+  }, [history]);
 
   return (
     <div data-testid="footer" className="navbar">
