@@ -1,21 +1,69 @@
 import React from 'react';
-import './App.css';
-import rockGlass from './images/rockGlass.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './components/Header';
+import { Route, Switch } from 'react-router-dom';
+import Login from './pages/Login';
+import Meals from './pages/Meals';
+import Drinks from './pages/Drinks';
+import RecipeDetails from './components/RecipeDetails';
+import RecipeInProgress from './components/RecipeInProgress';
+import Profile from './pages/Profile';
+import DoneRecipes from './pages/DoneRecipes';
+import FavoriteRecipes from './pages/FavoriteRecipes';
 
 function App() {
   return (
-    <div className="meals">
-      <Header title="Home Page" />
-      <span className="logo">TRYBE</span>
-      <object
-        className="rocksGlass"
-        type="image/svg+xml"
-        data={ rockGlass }
-      >
-        Glass
-      </object>
+    <div>
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={ () => (<Login />) }
+        />
+        <Route
+          exact
+          path="/meals"
+          render={ () => (<Meals />) }
+        />
+        <Route
+          exact
+          path="/drinks"
+          render={ () => (<Drinks />) }
+        />
+        <Route
+          exact
+          path="/meals/:id-da-receita"
+          render={ () => (<RecipeDetails />) }
+        />
+        <Route
+          exact
+          path="/drinks/:id-da-receita"
+          render={ () => (<RecipeDetails />) }
+        />
+        <Route
+          exact
+          path="/meals/:id-da-receita"
+          render={ () => (<RecipeInProgress />) }
+        />
+        <Route
+          exact
+          path="/drinks/:id-da-receita"
+          render={ () => (<RecipeInProgress />) }
+        />
+        <Route
+          exact
+          path="/profile"
+          render={ () => (<Profile />) }
+        />
+        <Route
+          exact
+          path="/done-recipes"
+          render={ () => (<DoneRecipes />) }
+        />
+        <Route
+          exact
+          path="/done-recipes"
+          render={ () => (<FavoriteRecipes />) }
+        />
+      </Switch>
     </div>
   );
 }
