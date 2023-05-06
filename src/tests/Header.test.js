@@ -1,6 +1,7 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 
 describe('Testa o componente Header', () => {
@@ -26,4 +27,18 @@ describe('Testa o componente Header', () => {
 
     expect(searchButton).toBeNull();
   });
+
+  it('O botao de perfil deve redirecionar o usuario para a pagina Profile', () => {
+    const { history } = renderWithRouter(<App />);
+    const mockedPush = jest.spyOn(history, 'push')
+    act(() => {
+      history.push('/meals');
+    })
+    const profileButton = screen.queryByTestId('profile-top-btn');
+    act(() => {
+      userEvent.click(profileButton)
+    })
+
+    expect(mockedPush).toHaveBeenCalledWith('/profile'); 
+  })
 });
