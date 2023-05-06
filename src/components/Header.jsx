@@ -44,14 +44,16 @@ function Header() {
           .includes(history?.location?.pathname)
           ? ''
           : (
-            <button data-testid="search-top-btn">
+            <button>
               <img
+                data-testid="search-top-btn"
                 alt="search-top-btn"
                 src={ searchIcon }
               />
             </button>)}
-        <button onClick={ handleProfileClick } data-testid="profile-top-btn">
+        <button onClick={ handleProfileClick }>
           <img
+            data-testid="profile-top-btn"
             alt="profile-top-btn"
             src={ profileIcon }
           />
