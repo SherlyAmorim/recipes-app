@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
@@ -22,6 +22,10 @@ const captalize = (string) => (
 function Header() {
   const history = useHistory();
 
+  const handleProfileClick = useCallback(() => {
+    history.push('/profile');
+  }, [history]);
+
   const getPageName = () => {
     const pathname = history?.location?.pathname || '';
     const arr = pathname.split('/');
@@ -40,17 +44,15 @@ function Header() {
           .includes(history?.location?.pathname)
           ? ''
           : (
-            <button>
+            <button data-testid="search-top-btn">
               <img
                 alt="search-top-btn"
-                data-testid="search-top-btn"
                 src={ searchIcon }
               />
             </button>)}
-        <button>
+        <button onClick={ handleProfileClick } data-testid="profile-top-btn">
           <img
             alt="profile-top-btn"
-            data-testid="profile-top-btn"
             src={ profileIcon }
           />
         </button>
