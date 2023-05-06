@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
@@ -9,31 +9,51 @@ const headerStyle = {
   position: 'absolute',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: '8px',
+  border: '1px solid green',
+  padding: '3px',
   backgroundColor: 'white',
   top: 0,
 };
 
+const captalize = (string) => (
+  string.charAt(0).toUpperCase() + string.slice(1)
+);
+
 function Header() {
-  // const history = useHistory();
+  const history = useHistory();
+
+  const getPageName = () => {
+    const pathname = history?.location?.pathname;
+    const arr = pathname.split('/');
+    return arr[arr.length - 1].split('-').map((str) => captalize(str)).join(' ');
+  };
 
   return (
     <header style={ headerStyle }>
-      <h2 data-testi="page-title">title</h2>
+      <h2
+        data-testid="page-title"
+      >
+        {getPageName()}
+      </h2>
       <div>
+        {['/profile', '/done-recipes', '/favorite-recipes']
+          .includes(history?.location?.pathname)
+          ? ''
+          : (
+            <button>
+              <img
+                alt="search-top-btn"
+                data-testid="search-top-btn"
+                src={ searchIcon }
+              />
+            </button>)}
         <button>
           <img
-            alt="search-top-btn"
-            data-testid="search-top-btn"
-            src={ searchIcon }
-
+            alt="profile-top-btn"
+            data-testid="profile-top-btn"
+            src={ profileIcon }
           />
         </button>
-        <img
-          alt="profile-top-btn"
-          data-testid="profile-top-btn"
-          src={ profileIcon }
-        />
       </div>
     </header>
   );
