@@ -60,7 +60,7 @@ function App() {
         />
         <Route
           exact
-          path="/done-recipes"
+          path="/favorite-recipes"
           render={ () => (<FavoriteRecipes />) }
         />
       </Switch>
