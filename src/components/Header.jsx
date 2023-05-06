@@ -30,7 +30,7 @@ function Header() {
   }, [history]);
 
   const getPageName = () => {
-    const pathname = history?.location?.pathname || '';
+    const pathname = history?.location?.pathname;
     const arr = pathname.split('/');
     return arr[arr.length - 1].split('-').map((str) => captalize(str)).join(' ');
   };
