@@ -23,7 +23,7 @@ const captalize = (string) => (
 
 function Header() {
   const history = useHistory();
-  const { toggleEnableSearch } = useContext(MyContext);
+  const { enableSearch, toggleEnableSearch } = useContext(MyContext);
 
   const handleProfileClick = useCallback(() => {
     history.push('/profile');
@@ -62,7 +62,7 @@ function Header() {
           />
         </button>
       </div>
-      <SearchBar />
+      {enableSearch && <SearchBar />}
     </header>
   );
 }
