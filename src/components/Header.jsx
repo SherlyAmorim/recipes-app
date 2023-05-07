@@ -8,7 +8,7 @@ import SearchBar from './SearchBar';
 const headerStyle = {
   display: 'flex',
   width: '100%',
-  position: 'absolute',
+  position: 'static',
   justifyContent: 'space-between',
   alignItems: 'center',
   border: '1px solid green',
