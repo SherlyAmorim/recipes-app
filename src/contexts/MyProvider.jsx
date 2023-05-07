@@ -2,32 +2,54 @@ import React, { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
 
-const INITIAL_STATE1 = { nome: 'Xablau1', idade: 101 };
-const INITIAL_STATE2 = { nome: 'Xablau2', idade: 102 };
-
 function Provider({ children }) {
-  const [state1, setState1] = useState(INITIAL_STATE1);
-  const [state2, setState2] = useState(INITIAL_STATE2);
   const [enableSearch, setEnableSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   const toggleEnableSearch = useCallback(() => {
     setEnableSearch(!enableSearch);
   }, [enableSearch, setEnableSearch]);
 
+  const searchRecipes = useCallback(async (searchQuery, searchType) => {
+    let apiUrl = '';
+
+    switch (searchType) {
+    case 'ingredient':
+      apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchQuery}`;
+      break;
+    case 'name':
+      apiUrl = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`;
+      break;
+    case 'firstLetter':
+      if (searchQuery.length > 1) {
+        global.alert('Your search must have only 1 (one) character');
+        return;
+      }
+      apiUrl = `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchQuery}`;
+      break;
+    default:
+      break;
+    }
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      setSearchResults(data.meals || []);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   const values = useMemo(() => ({
-    state1,
-    state2,
     enableSearch,
-    setState1,
-    setState2,
     toggleEnableSearch,
+    searchRecipes,
+    searchResults,
   }), [
-    state1,
-    state2,
     enableSearch,
-    setState1,
-    setState2,
     toggleEnableSearch,
+    searchRecipes,
+    searchResults,
   ]);
 
   return (
