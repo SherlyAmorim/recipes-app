@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import MyContext from '../contexts/MyContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 const headerStyle = {
   display: 'flex',
@@ -21,13 +23,14 @@ const captalize = (string) => (
 
 function Header() {
   const history = useHistory();
+  const { toggleEnableSearch } = useContext(MyContext);
 
   const handleProfileClick = useCallback(() => {
     history.push('/profile');
   }, [history]);
 
   const getPageName = () => {
-    const pathname = history?.location?.pathname || '';
+    const pathname = history?.location?.pathname;
     const arr = pathname.split('/');
     return arr[arr.length - 1].split('-').map((str) => captalize(str)).join(' ');
   };
@@ -44,7 +47,7 @@ function Header() {
           .includes(history?.location?.pathname)
           ? ''
           : (
-            <button>
+            <button onClick={ toggleEnableSearch }>
               <img
                 data-testid="search-top-btn"
                 alt="search-top-btn"
@@ -59,6 +62,7 @@ function Header() {
           />
         </button>
       </div>
+      <SearchBar />
     </header>
   );
 }
