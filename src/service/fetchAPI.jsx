@@ -1,23 +1,34 @@
-export const mealApi = async () => {
-  const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-  const dataMeal = await response.json();
-  return dataMeal;
+export const mealApi = async (searchInput, searchRadio) => {
+  let response = {};
+
+  if (searchRadio === 'ingredient') {
+    response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+  } else if (searchRadio === 'name') {
+    response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`);
+  } else {
+    response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error fetching data from Meal API: ${response.status}`);
+  }
+
+  return response.json();
 };
 
-export const genericSearchMealAPI = async (param) => {
-  const response = await fetch(`https://www.themealdb.com/api/json/v1/1/${param}`);
-  const dataSearch = await response.json();
-  return dataSearch;
-};
+export const cockTailApi = async (searchInput, searchRadio) => {
+  let response = {};
+  if (searchRadio === 'ingredient') {
+    response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+  } else if (searchRadio === 'name') {
+    response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInput}`);
+  } else {
+    response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchInput}`);
+  }
 
-export const drinkApi = async () => {
-  const response = await fetch('www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-  const dataDrink = await response.json();
-  return dataDrink;
-};
+  if (!response.ok) {
+    throw new Error(`Error fetching data from Cocktail API: ${response.status}`);
+  }
 
-export const genericSearchDrinkAPI = async (param) => {
-  const response = await fetch(`www.thecocktaildb.com/api/json/v1/1/${param}`);
-  const dataSearch = await response.json();
-  return dataSearch;
+  return response.json();
 };

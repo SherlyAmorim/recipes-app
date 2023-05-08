@@ -1,68 +1,32 @@
-import React, { useState, useContext } from 'react';
-import MyContext from '../contexts/MyContext';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import Recipes from './Recipes';
+import useSearch from '../hooks/useSearch';
+import SearchForm from './SearchForm';
 
 export default function SearchBar() {
-  const { enableSearch, searchRecipes } = useContext(MyContext);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState('ingredient');
-
-  const handleSearchClick = () => {
-    searchRecipes(searchQuery, searchType);
-  };
+  const {
+    searchInput,
+    setSearchInput,
+    searchInformationRadio,
+    setSearchInformationRadio,
+    recipes,
+    handleSearchSubmit,
+  } = useSearch();
+  const location = useLocation();
+  const imageKey = location.pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb';
+  const nameKey = location.pathname === '/meals' ? 'strMeal' : 'strDrink';
 
   return (
-    <div>
-      { enableSearch ? (
-        <>
-          <input
-            value={ searchQuery }
-            onChange={ (e) => setSearchQuery(e.target.value) }
-            data-testid="search-input"
-          />
-          <label htmlFor="ingredient-search-radio">
-            Ingredient
-            <input
-              type="radio"
-              id="ingredient-search-radio"
-              name="search-type"
-              value="ingredient"
-              checked={ searchType === 'ingredient' }
-              onChange={ (e) => setSearchType(e.target.value) }
-              data-testid="ingredient-search-radio"
-            />
-          </label>
-          <label htmlFor="name-search-radio">
-            Name
-            <input
-              type="radio"
-              id="name-search-radio"
-              name="search-type"
-              value="name"
-              checked={ searchType === 'name' }
-              onChange={ (e) => setSearchType(e.target.value) }
-              data-testid="name-search-radio"
-            />
-          </label>
-          <label htmlFor="first-letter-search-radio">
-            First Letter
-            <input
-              type="radio"
-              id="first-letter-search-radio"
-              name="search-type"
-              value="firstLetter"
-              checked={ searchType === 'firstLetter' }
-              onChange={ (e) => setSearchType(e.target.value) }
-              data-testid="first-letter-search-radio"
-            />
-          </label>
-          <button
-            onClick={ handleSearchClick }
-            data-testid="exec-search-btn"
-          >
-            Search
-          </button>
-        </>
-      ) : ''}
-    </div>
+    <>
+      <SearchForm
+        searchInput={ searchInput }
+        setSearchInput={ setSearchInput }
+        searchInformationRadio={ searchInformationRadio }
+        setSearchInformationRadio={ setSearchInformationRadio }
+        handleSearchSubmit={ handleSearchSubmit }
+      />
+      <Recipes recipes={ recipes } imageKey={ imageKey } nameKey={ nameKey } />
+    </>
   );
 }
