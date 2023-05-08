@@ -5,7 +5,7 @@ import renderWithRouter from './helpers/renderWithRouter';
 import SearchBar from '../components/SearchBar';
 
 const INPUT = 'search-input';
-const FIRST = 'first-letter-search-radio'
+const FIRST = 'first-letter-search-radio';
 
 const mockHistoryPush = jest.fn();
 
