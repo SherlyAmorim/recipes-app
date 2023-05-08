@@ -4,7 +4,7 @@ import Login from './pages/Login';
 import Meals from './pages/Meals';
 import Drinks from './pages/Drinks';
 import RecipeDetails from './pages/RecipeDetails';
-import RecipeInProgress from './components/RecipeInProgress';
+import RecipeInProgress from './pages/RecipeInProgress';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
@@ -40,12 +40,12 @@ function App() {
         />
         <Route
           exact
-          path="/meals/:id"
+          path="/meals/:id/in-progress"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
           exact
-          path="/drinks/:id"
+          path="/drinks/:id/in-progress"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
