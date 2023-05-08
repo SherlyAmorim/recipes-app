@@ -30,22 +30,22 @@ function App() {
         />
         <Route
           exact
-          path="/meals/:id-da-receita"
+          path="/meals/:id"
           render={ () => (<RecipeDetails />) }
         />
         <Route
           exact
-          path="/drinks/:id-da-receita"
+          path="/drinks/:id"
           render={ () => (<RecipeDetails />) }
         />
         <Route
           exact
-          path="/meals/:id-da-receita"
+          path="/meals/:id"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
           exact
-          path="/drinks/:id-da-receita"
+          path="/drinks/:id"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
