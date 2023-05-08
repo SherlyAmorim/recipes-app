@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import Meals from './pages/Meals';
 import Drinks from './pages/Drinks';
-import RecipeDetails from './components/RecipeDetails';
+import RecipeDetails from './pages/RecipeDetails';
 import RecipeInProgress from './components/RecipeInProgress';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
@@ -30,22 +30,22 @@ function App() {
         />
         <Route
           exact
-          path="/meals/:id-da-receita"
+          path="/meals/:id"
           render={ () => (<RecipeDetails />) }
         />
         <Route
           exact
-          path="/drinks/:id-da-receita"
+          path="/drinks/:id"
           render={ () => (<RecipeDetails />) }
         />
         <Route
           exact
-          path="/meals/:id-da-receita"
+          path="/meals/:id"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
           exact
-          path="/drinks/:id-da-receita"
+          path="/drinks/:id"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
