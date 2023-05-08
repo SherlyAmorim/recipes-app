@@ -32,3 +32,12 @@ export const cockTailApi = async (searchInput, searchRadio) => {
 
   return response.json();
 };
+
+export const fetchRecipe = async (url) => {
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
