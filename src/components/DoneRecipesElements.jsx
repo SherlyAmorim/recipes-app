@@ -1,37 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import shareIcon from '../images/shareIcon.svg';
 
-const doneRecipesMock = {
-  meals: [
-    {
-      idMeal: '52967',
-      strMeal: 'Home-made Mandazi',
-      strCategory: 'Breakfast',
-      strArea: 'Kenyan',
-      strMealThumb: 'https://www.themealdb.com/images/media/meals/thazgm1555350962.jpg',
-      strTags: 'Baking,Breakfast,Egg,Warm,Snack',
-      dateModified: '31/09/2021',
-    },
-    {
-      idMeal: '00000',
-      strMeal: 'bolo',
-      strCategory: 'Breakfast',
-      strArea: 'Brazilian',
-      strMealThumb: 'https://cdn0.tudoreceitas.com/pt/posts/9/4/3/bolo_comum_de_liquidificador_10349_orig.jpg',
-      strTags: 'Baking,Breakfast,Egg,Warm,Snack',
-      dateModified: '10/05/2022',
-    },
-  ],
-};
+const doneRecipesMock = [
+  {
+    id: '52771',
+    type: 'meal',
+    nationality: 'Italian',
+    category: 'Vegetarian',
+    alcoholicOrNot: '',
+    name: 'Spicy Arrabiata Penne',
+    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
+    doneDate: '23/06/2020',
+    tags: ['Pasta', 'Curry'],
+  },
+  {
+    id: '178319',
+    type: 'drink',
+    nationality: '',
+    category: 'Cocktail',
+    alcoholicOrNot: 'Alcoholic',
+    name: 'Aquamarine',
+    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
+    doneDate: '23/06/2020',
+    tags: [],
+  },
+];
 
 function DoneRecipesElements() {
   const [doneRecipes, setDoneRecipes] = useState([]);
+
+  localStorage.setItem('doneRecipesMock', JSON.stringify(doneRecipesMock));
 
   useEffect(() => {
     const recipesFromLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'))
      || doneRecipesMock;
 
-    setDoneRecipes(recipesFromLocalStorage.meals);
+    setDoneRecipes(recipesFromLocalStorage);
   }, []);
 
   return (
@@ -55,11 +59,11 @@ function DoneRecipesElements() {
         <br />
       </form>
       {
-        doneRecipes.map((meal, index) => (
+        doneRecipes?.map((elem, index) => (
           <div key={ index }>
             <img
               data-testid={ `${index}-horizontal-image` }
-              src={ meal.strMealThumb }
+              src={ elem.image }
               alt="imagem da receita"
               height="120"
               width="200"
@@ -67,7 +71,7 @@ function DoneRecipesElements() {
             <h3
               data-testid={ `${index}-horizontal-name` }
             >
-              { `${meal.strMeal}` }
+              { `${elem.name}` }
             </h3>
             <button data-testid={ `${index}-horizontal-share-btn` }>
               <img
@@ -76,13 +80,13 @@ function DoneRecipesElements() {
               />
             </button>
             <p data-testid={ `${index}-horizontal-top-text` }>
-              { `${meal.strCategory}` }
+              { `${elem.category}` }
             </p>
             <p data-testid={ `${index}-horizontal-done-date` }>
-              { `Done in: ${meal.dateModified}` }
+              { `Done in: ${elem.doneDate}` }
             </p>
             {
-              meal.strTags.split(',').map((tag) => (
+              elem.tags.map((tag) => (
                 <p
                   key={ tag }
                   data-testid={ `${index}-${tag}-horizontal-tag` }
