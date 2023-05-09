@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+// import { Card } from 'react-bootstrap';
 import { fetchRecipe } from '../service/fetchAPI';
-import RecipeCard from './RecipeCard';
+import 'bootstrap/dist/css/bootstrap.css';
 
-const NUMBER_OF_RECOMENDATIONS = 6;
+const NUMBER_OF_RECOMMENDATIONS = 6;
 
 export default function Recomendations() {
-  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+  const { location: { pathname } } = history;
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  // const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const type = pathname.split('/')[1];
@@ -16,31 +20,66 @@ export default function Recomendations() {
       : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 
     const fetchData = async () => {
+      setLoading(true);
       const result = await fetchRecipe(url);
       console.log(result);
-      setRecipes(Object.values(result)[0].splice(0, NUMBER_OF_RECOMENDATIONS));
+      setRecipes(Object.values(result)[0].slice(0, NUMBER_OF_RECOMMENDATIONS));
+      setLoading(false);
     };
     fetchData();
   }, [pathname]);
+
   return (
     <div>
-      {
-        recipes.map((recipe) => {
-          const id = recipe.idDrink || recipe.idMeal;
-          const type = recipe.idDrink ? 'drinks' : 'meals';
-          const title = recipe.strDrink || recipe.strMeal;
-          const photo = recipe.strMealThumb || recipe.strDrinkThumb;
-          return (
-            <RecipeCard
-              key={ id }
-              id={ id }
-              type={ type }
-              title={ title }
-              photo={ photo }
-            />
-          );
-        })
-      }
+      {loading
+        ? <>Loading...</>
+        : (
+
+          <div>
+            <h2>Recomendations</h2>
+            <div className="d-flex flex-nowrap">
+              <ul
+                className="list-group list-group-horizontal overflow-x-scroll"
+              >
+                {
+                  recipes.map((recipe, index) => {
+                    // const id = recipe.idDrink || recipe.idMeal;
+                    // const type = recipe.idDrink ? 'drinks' : 'meals';
+                    const title = recipe.strDrink || recipe.strMeal;
+                    const photo = recipe.strMealThumb || recipe.strDrinkThumb;
+                    return (
+                      <li
+                        // onClick={ () => { history.push(`/${type}/${id}`); } }
+                        data-testid={
+                          `${index}-recommendation-card`
+                        }
+                        key={ index }
+                        className="list-group-item m-0 p-0"
+                      >
+                        <div style={ { width: '50vw' } }>
+
+                          <img
+                            src={ photo }
+                            alt={ title }
+                            width="100%"
+                          />
+
+                          <span
+                            data-testid={
+                              `${index}-recommendation-title`
+                            }
+                          >
+                            {title}
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })
+                }
+              </ul>
+            </div>
+          </div>)}
+
     </div>
   );
 }
