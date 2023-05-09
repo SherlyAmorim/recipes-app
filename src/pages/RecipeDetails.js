@@ -3,6 +3,7 @@ import { useHistory, Link, useParams } from 'react-router-dom';
 import MealDetails from '../components/MealDetails';
 import DrinkDetails from '../components/DrinkDetails';
 import Recomendations from '../components/Recomendations';
+import ShareBtn from '../components/ShareBtn';
 import { isRecipeDone } from '../service/localStorage/doneRecipes';
 import { isRecipeInProgress } from '../service/localStorage/inProgressRecipes';
 
@@ -32,9 +33,7 @@ function RecipeDetails() {
         </Link>)}
 
       <div>
-        <button data-testid="share-btn">
-          Share
-        </button>
+        <ShareBtn />
         <button data-testid="favorite-btn">
           Favorite
         </button>
