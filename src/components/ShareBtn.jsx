@@ -5,13 +5,16 @@ import ShareIcon from '../images/shareIcon.svg';
 const copy = require('clipboard-copy');
 
 export default function ShareBtn() {
-  const shareUrl = window.location.href;
+  const currentUrl = window.location.href;
+  const shareUrl = currentUrl.replace(/(\/(?:meals|drinks)\/\d+)\/.*/, '$1');
   const [showAlert, setShowAlert] = useState(false);
 
   const handleShare = () => {
+    console.log(shareUrl);
     copy(shareUrl);
     setShowAlert(true);
   };
+
   return (
     <div>
       {showAlert
