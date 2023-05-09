@@ -39,7 +39,7 @@ export default function Recomendations() {
             <h2>Recomendations</h2>
             <div className="d-flex flex-nowrap">
               <ul
-                className="list-group list-group-horizontal overflow-x-scroll"
+                className="list-group list-group-horizontal overflow-x-scroll mb-5"
               >
                 {
                   recipes.map((recipe, index) => {
