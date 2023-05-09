@@ -16,7 +16,7 @@ function Footer() {
   }, [history]);
 
   return (
-    <div data-testid="footer" className="navbar">
+    <div data-testid="footer" className="footer">
       <button
         data-testid="drinks-bottom-btn"
         type="button"
