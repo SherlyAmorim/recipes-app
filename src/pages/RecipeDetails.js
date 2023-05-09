@@ -30,6 +30,15 @@ function RecipeDetails() {
             ) ? 'Continue Recipe' : 'Start Recipe'
           }
         </Link>)}
+
+      <div>
+        <button data-testid="share-btn">
+          Share
+        </button>
+        <button data-testid="favorite-btn">
+          Favorite
+        </button>
+      </div>
       <Recomendations />
     </div>
   );
