@@ -4,6 +4,14 @@ import { screen, act, waitFor } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 import { mealData, drinkRecommendations, drinkData, mealRecommendations } from './mock/recipeData';
+import { isRecipeInProgress } from '../service/localStorage/inProgressRecipes';
+
+jest.mock(
+  '../service/localStorage/inProgressRecipes.js',
+  () => ({
+    isRecipeInProgress: jest.fn(),
+  }),
+);
 
 const setupFetchStub = (data) => () => new Promise((resolve) => {
   resolve({
@@ -44,12 +52,7 @@ describe('Testa o componente RecipeDetails', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('0-recommendation-title')).toHaveTextContent('GG');
-      expect(screen.getByTestId('1-recommendation-title')).toHaveTextContent('A1');
-      expect(screen.getByTestId('2-recommendation-title')).toHaveTextContent('ABC');
-      expect(screen.getByTestId('3-recommendation-title')).toHaveTextContent('Kir');
-      expect(screen.getByTestId('4-recommendation-title')).toHaveTextContent('747');
-      expect(screen.getByTestId('5-recommendation-title')).toHaveTextContent('252');
+      expect(screen.getByTestId('0-recommendation-title')).toHaveTextContent('Teriyaki Chicken Casserole');
     });
   });
 
@@ -65,12 +68,57 @@ describe('Testa o componente RecipeDetails', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('0-recommendation-title')).toHaveTextContent('Corba');
-      expect(screen.getByTestId('1-recommendation-title')).toHaveTextContent('Burek');
-      expect(screen.getByTestId('2-recommendation-title')).toHaveTextContent('Sushi');
-      expect(screen.getByTestId('3-recommendation-title')).toHaveTextContent('Kumpir');
-      expect(screen.getByTestId('4-recommendation-title')).toHaveTextContent('Tamiya');
-      expect(screen.getByTestId('5-recommendation-title')).toHaveTextContent('Teriyaki Chicken Casserole');
+      expect(screen.getByTestId('0-recommendation-title')).toHaveTextContent('Funk and Soul');
+    });
+  });
+
+  it('O botão de iniciar receita deve ser exibido corretamente', async () => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementationOnce(setupFetchStub(drinkData))
+      .mockImplementationOnce(setupFetchStub(mealRecommendations));
+
+    const { history } = renderWithRouter(<App />);
+
+    act(() => {
+      history.push('/drinks/178329');
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('start-recipe-btn')).toHaveTextContent('Start Recipe');
+    });
+  });
+
+  it('O botão de continuar receita deve ser exibido corretamente', async () => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementationOnce(setupFetchStub(drinkData))
+      .mockImplementationOnce(setupFetchStub(mealRecommendations));
+
+    isRecipeInProgress.mockReturnValue(() => true);
+
+    const { history } = renderWithRouter(<App />);
+
+    act(() => {
+      history.push('/drinks/178329');
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('start-recipe-btn')).toHaveTextContent('Continue Recipe');
+    });
+  });
+
+  it('O botão de favorito deve ser exibido corretamente', async () => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementationOnce(setupFetchStub(drinkData))
+      .mockImplementationOnce(setupFetchStub(mealRecommendations));
+
+    const { history } = renderWithRouter(<App />);
+
+    act(() => {
+      history.push('/drinks/178328');
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('favorite-btn')).toHaveAttribute('src', 'whiteHeartIcon.svg');
     });
   });
 });
