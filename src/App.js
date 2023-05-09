@@ -40,12 +40,12 @@ function App() {
         />
         <Route
           exact
-          path="/meals/:id"
+          path="/meals/:id/in-progress"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
           exact
-          path="/drinks/:id"
+          path="/drinks/:id/in-progress"
           render={ () => (<RecipeInProgress />) }
         />
         <Route
