@@ -4,13 +4,13 @@ import { fetchRecipe } from '../service/fetchAPI';
 
 export default function MealDetails() {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState({ recipe: 'empty' });
+  const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const response = await fetchRecipe(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-      setRecipe(response.meals ? response.meals[0] : {});
+      setRecipe(response.meals && response.meals[0]);
       setLoading(false);
     };
     fetchData();
@@ -22,7 +22,7 @@ export default function MealDetails() {
         ? <h3>Loading...</h3>
         : (
           <div>
-            { recipe.strMeal
+            { recipe && recipe.strMeal
               ? (
                 <div>
                   <img
@@ -40,22 +40,19 @@ export default function MealDetails() {
                         .filter(([key, value]) => (
                           key.includes('strIngredient') && value))
                         .map(([key, value]) => {
-                          if (key.includes('strIngredient') && value) {
-                            const index = key.match(/\d/g).join('');
-                            const measure = `strMeasure${index}`;
-                            return (
-                              <li key={ index }>
-                                <p
-                                  data-testid={
-                                    `${index - 1}-ingredient-name-and-measure`
-                                  }
-                                >
-                                  {`${recipe[measure]} - ${value}`}
-                                </p>
-                              </li>
-                            );
-                          }
-                          return null;
+                          const index = key.match(/\d/g).join('');
+                          const measure = `strMeasure${index}`;
+                          return (
+                            <li key={ index }>
+                              <p
+                                data-testid={
+                                  `${index - 1}-ingredient-name-and-measure`
+                                }
+                              >
+                                {`${recipe[measure]} - ${value}`}
+                              </p>
+                            </li>
+                          );
                         })
                     }
                   </ul>
