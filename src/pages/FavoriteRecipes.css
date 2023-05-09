@@ -1,0 +1,53 @@
+.favorite-recipes {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-recipes-container {
+  padding: 2rem;
+  width: 100%;
+}
+
+.favorite-recipes-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.favorite-recipes-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.favorite-recipes-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.recipe-image {
+  border-radius: 4px;
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.recipe-info {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.recipe-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
