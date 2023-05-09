@@ -61,7 +61,6 @@ function MealProgress() {
 
   return (
     <div>
-      {/* {console.log(isChecked)} */}
       <img src={ recipe.photo } alt={ recipe.title } data-testid="recipe-photo" />
       <div data-testid="recipe-title">{ recipe.title }</div>
       <button data-testid="share-btn"><img src={ shareIcon } alt="share icon" /></button>
