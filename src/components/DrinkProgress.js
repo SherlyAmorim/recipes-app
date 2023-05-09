@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { fetchRecipe } from '../service/fetchAPI';
-import shareIcon from '../images/shareIcon.svg';
 
 function DrinkProgress() {
   const { id } = useParams();
+  const history = useHistory();
   const [recipe, setRecipe] = useState({
     photo: '',
     title: '',
     category: '',
     ingredients: [],
     instructions: '',
-    isAlcoholic: false });
+    isAlcoholic: '',
+    tags: [],
+    nationality: '' });
   const [isChecked, setChecked] = useState({});
+  const [canFinish, setCanFinish] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +23,6 @@ function DrinkProgress() {
       const drinks = response.drinks[0];
       const ingredients = [];
       const maxIngredients = 15;
-
       for (let index = 1; index <= maxIngredients; index += 1) {
         const ingredientKey = `strIngredient${index}`;
         const measureKey = `strMeasure${index}`;
@@ -31,6 +33,8 @@ function DrinkProgress() {
         }
       }
 
+      const tags = drinks.strTags ? drinks.strTags.split(',') : [];
+
       setRecipe((prevRecipe) => ({
         ...prevRecipe,
         photo: drinks.strDrinkThumb,
@@ -38,38 +42,74 @@ function DrinkProgress() {
         category: drinks.strCategory,
         ingredients,
         instructions: drinks.strInstructions,
-        isAlcoholic: drinks.strAlcoholic === 'Alcoholic',
+        isAlcoholic: drinks.strAlcoholic,
+        tags,
+        nationality: '',
       }));
     };
     fetchData();
   }, [id]);
 
   useEffect(() => {
-    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
-    setChecked(savedProgress[id] || []);
+    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes')) || {
+      drinks: {},
+      meals: {},
+    };
+    setChecked(savedProgress.drinks[id] || []);
   }, [id]);
 
   const onChecked = ({ target }) => {
     const { checked } = target;
-    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes')) || {};
-    savedProgress[id] = savedProgress[id]
-      ? [...savedProgress[id], target.name]
-      : [target.name];
+    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes')) || {
+      drinks: {},
+      meals: {},
+    };
 
-    if (!checked) {
-      savedProgress[id] = savedProgress[id].filter((item) => item !== target.name);
+    if (!savedProgress.drinks[id]) {
+      savedProgress.drinks[id] = [];
+    }
+
+    if (checked) {
+      savedProgress.drinks[id].push(target.name);
+    } else {
+      savedProgress.drinks[id] = savedProgress.meals[id]
+        .filter((item) => item !== target.name);
     }
 
     localStorage.setItem('inProgressRecipes', JSON.stringify(savedProgress));
-    setChecked(savedProgress[id]);
+    setChecked(savedProgress.drinks[id]);
+  };
+
+  useEffect(() => {
+    if (isChecked.length === recipe.ingredients.length) {
+      setCanFinish(false);
+    } else {
+      setCanFinish(true);
+    }
+  }, [isChecked, recipe.ingredients.length]);
+
+  const onFinish = () => {
+    const doneRecipe = {
+      id,
+      nationality: recipe.nationality,
+      name: recipe.title,
+      category: recipe.category,
+      image: recipe.photo,
+      tags: recipe.tags,
+      alcoholicOrNot: recipe.isAlcoholic,
+      type: 'drink',
+      doneDate: new Date().toISOString(),
+    };
+    const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
+    doneRecipes.push(doneRecipe);
+    localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
+    history.push('/done-recipes');
   };
 
   return (
     <div>
       <img src={ recipe.photo } alt={ recipe.title } data-testid="recipe-photo" />
       <div data-testid="recipe-title">{ recipe.title }</div>
-      <button data-testid="share-btn"><img src={ shareIcon } alt="share icon" /></button>
-      <button data-testid="favorite-btn">Favoritar</button>
       <div data-testid="recipe-category">{ recipe.category}</div>
       <div data-testid="instructions">{ recipe.instructions }</div>
 
@@ -98,7 +138,13 @@ function DrinkProgress() {
           </label>
         );
       })}
-      <button data-testid="finish-recipe-btn">Finish Recipe</button>
+      <button
+        data-testid="finish-recipe-btn"
+        disabled={ canFinish }
+        onClick={ onFinish }
+      >
+        Finish Recipe
+      </button>
     </div>
   );
 }
