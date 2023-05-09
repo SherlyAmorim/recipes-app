@@ -4,6 +4,7 @@ import MealDetails from '../components/MealDetails';
 import DrinkDetails from '../components/DrinkDetails';
 import Recomendations from '../components/Recomendations';
 import { isRecipeDone } from '../service/localStorage/doneRecipes';
+import { isRecipeInProgress } from '../service/localStorage/inProgressRecipes';
 
 function RecipeDetails() {
   const history = useHistory();
@@ -18,12 +19,16 @@ function RecipeDetails() {
       {!isRecipeDone(id, pathname.split('/')[1] === 'meals' ? 'meal' : 'drink')
       && (
         <Link
-        // onClick={ history.push(`${pathname}in-progress`) }
           className="btn btn-primary fixed-bottom"
           data-testid="start-recipe-btn"
           to={ `${pathname}/in-progress` }
         >
-          Start Recipe
+          {
+            isRecipeInProgress(
+              id,
+              pathname.split('/')[1] === 'meals' ? 'meal' : 'drink',
+            ) ? 'Continue Recipe' : 'Start Recipe'
+          }
         </Link>)}
       <Recomendations />
     </div>
