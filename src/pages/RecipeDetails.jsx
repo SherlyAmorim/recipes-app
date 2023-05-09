@@ -7,6 +7,8 @@ import ShareBtn from '../components/ShareBtn';
 import { isRecipeDone } from '../service/localStorage/doneRecipes';
 import { isRecipeInProgress } from '../service/localStorage/inProgressRecipes';
 
+const getType = (pathname) => (pathname.split('/')[1] === 'meals' ? 'meal' : 'drink');
+
 function RecipeDetails() {
   const history = useHistory();
   const { location: { pathname } } = history;
@@ -17,7 +19,7 @@ function RecipeDetails() {
       {pathname.split('/')[1] === 'meals'
         ? <MealDetails />
         : <DrinkDetails />}
-      {!isRecipeDone(id, pathname.split('/')[1] === 'meals' ? 'meal' : 'drink')
+      {!isRecipeDone(id, getType(pathname))
       && (
         <Link
           className="btn btn-primary fixed-bottom"
@@ -27,7 +29,7 @@ function RecipeDetails() {
           {
             isRecipeInProgress(
               id,
-              pathname.split('/')[1] === 'meals' ? 'meal' : 'drink',
+              getType(pathname),
             ) ? 'Continue Recipe' : 'Start Recipe'
           }
         </Link>)}
