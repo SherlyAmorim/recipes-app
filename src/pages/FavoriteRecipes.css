@@ -1,12 +1,12 @@
 .favorite-recipes {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .favorite-recipes-container {
-  width: 100%;
   padding: 2rem;
+  width: 100%;
 }
 
 .favorite-recipes-title {
