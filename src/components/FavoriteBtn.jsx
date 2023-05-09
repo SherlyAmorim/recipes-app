@@ -18,7 +18,6 @@ function FavoriteBtn() {
 
   useEffect(() => {
     setFavorite(isFavorite(id, getType(pathname)));
-    console.log(isFavorite(id, getType(pathname)));
   }, [id, pathname, currentRecipe]);
 
   const handleFavorite = () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import MealDetails from '../components/MealDetails';
 import Context from '../contexts/MyContext';
@@ -16,10 +16,19 @@ function RecipeDetails() {
   const { location: { pathname } } = history;
   const { id } = useParams();
   const { setCurrentRecipe } = useContext(Context);
+  const [inProgress, setInProgress] = useState(false);
 
   useEffect(() => {
     setCurrentRecipe(id, getType(pathname));
   }, [id, pathname, setCurrentRecipe]);
+
+  useEffect(() => {
+    const value = isRecipeInProgress(
+      id,
+      getType(pathname),
+    );
+    setInProgress(value ? 'Continue Recipe' : 'Start Recipe');
+  }, [id, pathname]);
 
   return (
     <div>
@@ -34,10 +43,7 @@ function RecipeDetails() {
           to={ `${pathname}/in-progress` }
         >
           {
-            isRecipeInProgress(
-              id,
-              getType(pathname),
-            ) ? 'Continue Recipe' : 'Start Recipe'
+            inProgress
           }
         </Link>)}
 
