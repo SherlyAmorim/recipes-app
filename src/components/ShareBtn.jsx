@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-bootstrap';
+import ShareIcon from '../images/shareIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -24,10 +25,14 @@ export default function ShareBtn() {
           </Alert>)
         : ''}
       <button
+        className="btn btn-light"
         data-testid="share-btn"
         onClick={ handleShare }
       >
-        Share
+        <img
+          src={ ShareIcon }
+          alt="share"
+        />
       </button>
     </div>
   );

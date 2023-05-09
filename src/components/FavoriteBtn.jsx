@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Context from '../contexts/MyContext';
+import blHeart from '../images/blackHeartIcon.svg';
+import wHeart from '../images/whiteHeartIcon.svg';
 import {
   isFavorite,
   saveFavorite,
@@ -51,10 +53,18 @@ function FavoriteBtn() {
   return (
     <div>
       <button
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
+        className="btn btn-light"
       >
-        Favorite
+        <img
+          data-testid="favorite-btn"
+          alt="favorite"
+          src={
+            favorite
+              ? blHeart
+              : wHeart
+          }
+        />
       </button>
     </div>
   );
