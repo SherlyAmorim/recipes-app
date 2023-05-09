@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchRecipe } from '../service/fetchAPI';
+import React, { useContext } from 'react';
+import Context from '../contexts/MyContext';
 
 export default function MealDetails() {
-  const { id } = useParams();
-  const [recipe, setRecipe] = useState(null);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response = await fetchRecipe(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-      setRecipe(response.meals && response.meals[0]);
-      setLoading(false);
-    };
-    fetchData();
-  }, [id]);
+  const { loading, currentRecipe } = useContext(Context);
+  const recipe = currentRecipe;
 
   return (
     <div>

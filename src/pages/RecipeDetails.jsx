@@ -5,7 +5,7 @@ import Context from '../contexts/MyContext';
 import DrinkDetails from '../components/DrinkDetails';
 import Recomendations from '../components/Recomendations';
 import ShareBtn from '../components/ShareBtn';
-// import FavoriteBtn from '../components/FavoriteBtn';
+import FavoriteBtn from '../components/FavoriteBtn';
 import { isRecipeDone } from '../service/localStorage/doneRecipes';
 import { isRecipeInProgress } from '../service/localStorage/inProgressRecipes';
 
@@ -43,7 +43,7 @@ function RecipeDetails() {
 
       <div>
         <ShareBtn />
-        {/* <FavoriteBtn /> */}
+        <FavoriteBtn />
       </div>
       <Recomendations />
     </div>

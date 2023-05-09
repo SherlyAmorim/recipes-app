@@ -9,11 +9,17 @@ function Provider({ children }) {
   const [currentRecipe, setCurrentRecipe] = useState(null);
 
   const setRecipe = useCallback(async (id, type) => {
-    const url = type === 'meal'
-      ? `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-      : `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-    const response = await fetchRecipe(url);
-    setCurrentRecipe(response[`${type}s`] && response[`${type}s`][0]);
+    setLoading(true);
+    try {
+      const url = type === 'meal'
+        ? `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+        : `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const response = await fetchRecipe(url);
+      setCurrentRecipe(response[`${type}s`] && response[`${type}s`][0]);
+    } catch (error) {
+      setLoading(false);
+    }
+    setLoading(false);
   }, [setCurrentRecipe]);
 
   const setLoadingMemo = useCallback((value) => {
