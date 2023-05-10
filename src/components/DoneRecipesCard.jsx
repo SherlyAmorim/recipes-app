@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Card } from 'react-bootstrap';
 import shareIcon from '../images/shareIcon.svg';
+import { element } from 'prop-types';
 
 const doneRecipesMock = [
   {
@@ -59,34 +61,37 @@ function DoneRecipesElements() {
         <br />
       </form>
       {
-        doneRecipes?.map((elem, index) => (
-          <div key={ index }>
+        doneRecipes?.map((meal, index) => (
+          <Card key={ index }>
             <img
               data-testid={ `${index}-horizontal-image` }
-              src={ elem.image }
+              src={ meal.image }
               alt="imagem da receita"
               height="120"
               width="200"
             />
-            <h3
-              data-testid={ `${index}-horizontal-name` }
-            >
-              { `${elem.name}` }
+            <h3 data-testid={ `${index}-horizontal-name` }>
+              { `${meal.name}` }
             </h3>
-            <button data-testid={ `${index}-horizontal-share-btn` }>
+            <button
+              data-testid={ `${index}-horizontal-share-btn` }
+              style={ { height: '40px', width: '50px' } }
+              src={ shareIcon }
+            >
               <img
                 src={ shareIcon }
                 alt="Icone de Compartilhamento da receita"
+                style={ { height: '35px', width: '35px' } }
               />
             </button>
             <p data-testid={ `${index}-horizontal-top-text` }>
-              { `${elem.category}` }
+              { `${meal.nationality} - ${meal.category}` }
             </p>
             <p data-testid={ `${index}-horizontal-done-date` }>
-              { `Done in: ${elem.doneDate}` }
+              { `Done in: ${meal.doneDate}` }
             </p>
             {
-              elem.tags.map((tag) => (
+              meal.tags.slice(0, 2).map((tag) => (
                 <p
                   key={ tag }
                   data-testid={ `${index}-${tag}-horizontal-tag` }
@@ -94,9 +99,50 @@ function DoneRecipesElements() {
                   { `${tag}` }
                 </p>))
             }
-          </div>
+          </Card>
         ))
       }
+      {/* {
+        doneRecipes?.filter((x) => x.type.includes('drink')).map((meal, index) => (
+          <Card key={ index }>
+            <img
+              data-testid={ `${index}-horizontal-image` }
+              src={ meal.image }
+              alt="imagem da receita"
+              height="120"
+              width="200"
+            />
+            <h3 data-testid={ `${index}-horizontal-name` }>
+              { `${meal.name}` }
+            </h3>
+            <button
+              data-testid={ `${index}-horizontal-share-btn` }
+              style={ { height: '40px', width: '50px' } }
+            >
+              <img
+                src={ shareIcon }
+                alt="Icone de Compartilhamento da receita"
+                style={ { height: '35px', width: '35px' } }
+              />
+            </button>
+            <p data-testid={ `${index}-horizontal-top-text` }>
+              { `${meal.category}` }
+            </p>
+            <p data-testid={ `${index}-horizontal-done-date` }>
+              { `Done in: ${meal.doneDate}` }
+            </p>
+            {
+              meal.tags.slice(0, 2).map((tag) => (
+                <p
+                  key={ tag }
+                  data-testid={ `${index}-${tag}-horizontal-tag` }
+                >
+                  { `${tag}` }
+                </p>))
+            }
+          </Card>
+        ))
+      } */}
     </>
   );
 }
