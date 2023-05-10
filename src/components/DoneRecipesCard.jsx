@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import shareIcon from '../images/shareIcon.svg';
-import { element } from 'prop-types';
 
 const doneRecipesMock = [
   {
