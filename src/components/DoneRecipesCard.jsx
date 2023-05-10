@@ -3,31 +3,6 @@ import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 
-const doneRecipesMock = [
-  {
-    id: '52771',
-    type: 'meal',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-    doneDate: '23/06/2020',
-    tags: ['Pasta', 'Curry'],
-  },
-  {
-    id: '178319',
-    type: 'drink',
-    nationality: '',
-    category: 'Cocktail',
-    alcoholicOrNot: 'Alcoholic',
-    name: 'Aquamarine',
-    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-    doneDate: '23/06/2020',
-    tags: [],
-  },
-];
-
 const copy = require('clipboard-copy');
 
 function DoneRecipesElements() {
@@ -35,11 +10,8 @@ function DoneRecipesElements() {
   const [typeRecipes, setTypeRecipes] = useState([]);
   const [copyLink, setCopyLink] = useState(false);
 
-  localStorage.setItem('doneRecipesMock', JSON.stringify(doneRecipesMock));
-
   useEffect(() => {
-    const recipesFromLocalStorage = JSON.parse(localStorage.getItem('doneRecipesMock'));
-    //  || doneRecipesMock;
+    const recipesFromLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
     if (recipesFromLocalStorage) {
       setDoneRecipes(recipesFromLocalStorage);
       setTypeRecipes(recipesFromLocalStorage);
@@ -70,9 +42,6 @@ function DoneRecipesElements() {
 
   return (
     <>
-      {
-        console.log(typeRecipes)
-      }
       <form>
         <button
           type="button"
