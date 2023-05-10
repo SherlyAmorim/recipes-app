@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 
 const doneRecipesMock = [
@@ -99,16 +100,20 @@ function DoneRecipesElements() {
       {
         typeRecipes?.map((recipe, index) => (
           <Card key={ index }>
-            <img
-              data-testid={ `${index}-horizontal-image` }
-              src={ recipe.image }
-              alt="imagem da receita"
-              height="120"
-              width="200"
-            />
-            <h3 data-testid={ `${index}-horizontal-name` }>
-              { `${recipe.name}` }
-            </h3>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
+              <img
+                data-testid={ `${index}-horizontal-image` }
+                src={ recipe.image }
+                alt="imagem da receita"
+                height="120"
+                width="200"
+              />
+            </Link>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
+              <h3 data-testid={ `${index}-horizontal-name` }>
+                { `${recipe.name}` }
+              </h3>
+            </Link>
             <button
               data-testid={ `${index}-horizontal-share-btn` }
               style={ { height: '40px', width: '50px' } }
@@ -122,20 +127,15 @@ function DoneRecipesElements() {
               />
             </button>
             {copyLink && <p>Link copied!</p>}
-            {
-              typeRecipes[index].type === 'meal'
-                && <p
-                  data-testid={ `${index}-horizontal-top-text` }
-                >
-                  { `${recipe.nationality} - ${recipe.category}` }
-                </p>
-            }
-            {
-              typeRecipes[index].type === 'drink'
-                  && <p data-testid={ `${index}-horizontal-top-text` }>
-                    {`${recipe.alcoholicOrNot}`}
-                  </p>
-            }
+            <p
+              data-testid={ `${index}-horizontal-top-text` }
+            >
+              {
+                recipe.type === 'meal'
+                  ? `${recipe.nationality} - ${recipe.category}`
+                  : `${recipe.alcoholicOrNot}`
+              }
+            </p>
             <p data-testid={ `${index}-horizontal-done-date` }>
               { `Done in: ${recipe.doneDate}` }
             </p>
