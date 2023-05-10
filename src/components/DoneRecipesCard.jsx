@@ -27,9 +27,12 @@ const doneRecipesMock = [
   },
 ];
 
+const copy = require('clipboard-copy');
+
 function DoneRecipesElements() {
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [typeRecipes, setTypeRecipes] = useState([]);
+  const [copyLink, setCopyLink] = useState(false);
 
   localStorage.setItem('doneRecipesMock', JSON.stringify(doneRecipesMock));
 
@@ -53,9 +56,19 @@ function DoneRecipesElements() {
     }
   };
 
+  const copyUrl = (recipeId, recipeType) => {
+    const copyedUrl = `${window.location.origin}/${recipeType}s/${recipeId}`;
+    copy(copyedUrl);
+    setCopyLink(true);
+    const THREE_SECONDS = 3000;
+    setTimeout(
+      () => setCopyLink(false),
+      THREE_SECONDS,
+    );
+  };
+
   return (
     <>
-      {/* {filterDoneRecipes()} */}
       {
         console.log(typeRecipes)
       }
@@ -99,6 +112,7 @@ function DoneRecipesElements() {
             <button
               data-testid={ `${index}-horizontal-share-btn` }
               style={ { height: '40px', width: '50px' } }
+              onClick={ () => copyUrl(recipe.id, recipe.type) }
               src={ shareIcon }
             >
               <img
@@ -107,6 +121,7 @@ function DoneRecipesElements() {
                 style={ { height: '35px', width: '35px' } }
               />
             </button>
+            {copyLink && <p>Link copied!</p>}
             {
               typeRecipes[index].type === 'meal'
                 && <p
