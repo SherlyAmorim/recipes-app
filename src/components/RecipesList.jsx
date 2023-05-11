@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import context from '../contexts/MyContext';
 import fetchRecipeData from '../service/fetchRecipes';
 import fetchCategoryData from '../service/fetchCategory';
+import RecipeCard from './RecipeCard';
 
-function RecipeCard({ value }) {
-  const [recipes, setRecipes] = useState([]);
+function RecipesList({ value }) {
+  const { recipesList, setRecipesList } = useContext(context);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchRecipes = async () => {
       const data = await fetchRecipeData(value);
-      setRecipes(data);
+      setRecipesList(data);
     };
     const fetchCategories = async () => {
       const data = await fetchCategoryData(value);
@@ -18,17 +20,17 @@ function RecipeCard({ value }) {
     };
     fetchRecipes();
     fetchCategories();
-  }, [value]);
+  }, [value, setRecipesList]);
 
   const MAX_RECIPES = 12;
   const MAX_CATEGORIES = 5;
 
-  const results = recipes.slice(0, MAX_RECIPES);
+  const results = recipesList.slice(0, MAX_RECIPES);
   const resultsCategories = categories.slice(0, MAX_CATEGORIES);
 
   return (
     <div>
-      {value === 'Meals' && (results.map((recipe, index) => (
+      {/* {value === 'Meals' && (results.map((recipe, index) => (
         <div
           key={ recipe.idMeal }
           className="recipe"
@@ -55,7 +57,7 @@ function RecipeCard({ value }) {
           />
           <h3 data-testid={ `${index}-card-name` }>{recipe.strDrink}</h3>
         </div>
-      )))}
+      )))} */}
       {value === 'Meals' && (resultsCategories.map((category, index) => (
         <button
           key={ index }
@@ -74,12 +76,34 @@ function RecipeCard({ value }) {
           { category.strCategory }
         </button>
       )))}
+
+      <div>
+        {
+          results.map((recipe, index) => {
+            const { idMeal, strMealThumb, strMeal } = recipe;
+            const { idDrink, strDrinkThumb, strDrink } = recipe;
+            const id = idMeal || idDrink;
+            const name = strMeal || strDrink;
+            const photo = strMealThumb || strDrinkThumb;
+            return (
+              <RecipeCard
+                key={ id }
+                id={ id }
+                type={ idMeal ? 'meals' : 'drinks' }
+                title={ name }
+                photo={ photo }
+                index={ index }
+              />
+            );
+          })
+        }
+      </div>
     </div>
   );
 }
 
-RecipeCard.propTypes = {
+RecipesList.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-export default RecipeCard;
+export default RecipesList;
