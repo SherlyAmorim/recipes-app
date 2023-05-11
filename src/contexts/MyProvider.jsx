@@ -7,6 +7,7 @@ function Provider({ children }) {
   const [enableSearch, setEnableSearch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentRecipe, setCurrentRecipe] = useState(null);
+  const [recipesList, setRecipesList] = useState([]);
 
   const setRecipe = useCallback(async (id, type) => {
     setLoading(true);
@@ -34,6 +35,8 @@ function Provider({ children }) {
     enableSearch,
     loading,
     currentRecipe,
+    recipesList,
+    setRecipesList,
     setCurrentRecipe: setRecipe,
     setLoading: setLoadingMemo,
     toggleEnableSearch,
@@ -41,6 +44,8 @@ function Provider({ children }) {
     enableSearch,
     loading,
     currentRecipe,
+    recipesList,
+    setRecipesList,
     setRecipe,
     setLoadingMemo,
     toggleEnableSearch,

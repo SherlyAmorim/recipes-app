@@ -1,12 +1,13 @@
 import React from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import RecipesList from '../components/RecipesList';
 
 function Meals() {
   return (
     <div>
       <Header />
-      <h1>Meals</h1>
+      <RecipesList value="Meals" />
       <Footer />
     </div>
   );
