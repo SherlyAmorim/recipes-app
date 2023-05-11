@@ -1,13 +1,13 @@
 import React from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import DoneRecipesElements from '../components/DoneRecipesElements';
+import DoneRecipesCard from '../components/DoneRecipesCard';
 
 function DoneRecipes() {
   return (
     <>
       <Header />
-      <DoneRecipesElements />
+      <DoneRecipesCard />
       <Footer />
     </>
   );
