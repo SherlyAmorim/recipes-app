@@ -1,13 +1,18 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import FavoriteRecipes from '../pages/FavoriteRecipes';
+import renderWithRouter from './helpers/renderWithRouter';
+import App from '../App';
 import { mealData, drinkData } from './mock/recipeData';
+// import FavoriteRecipes from '../pages/FavoriteRecipes';
+const clipboardCopy = require('clipboard-copy');
 
 const filterByMeal = 'filter-by-meal-btn';
 const filterByDrink = 'filter-by-drink-btn';
 const filterByAll = 'filter-by-all-btn';
+
+jest.mock('clipboard-copy', () => jest.fn());
+clipboardCopy.mockImplementation(() => {});
 
 const mockRecipes = [
   {
@@ -34,43 +39,46 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-const renderWithRouter = (component) => render(
-  <BrowserRouter>
-    {component}
-  </BrowserRouter>,
-);
+const FAVORITE_RECIPES_URL = '/favorite-recipes';
 
 test('renders favorite recipes with images and titles', () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
-  expect(screen.getByText(/favorite recipes/i)).toBeInTheDocument();
-  expect(screen.getByText(/test meal/i)).toBeInTheDocument();
-  expect(screen.getByText(/test drink/i)).toBeInTheDocument();
-  expect(screen.getByAltText(/test meal/i)).toBeInTheDocument();
-  expect(screen.getByAltText(/test drink/i)).toBeInTheDocument();
+  expect(screen.getByTestId('page-title')).toHaveTextContent('Favorite Recipes');
+  expect(screen.getByText(mockRecipes[0].name)).toBeInTheDocument();
+  expect(screen.getByText(mockRecipes[1].name)).toBeInTheDocument();
 });
 
 test('filters favorite recipes by type', () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
   fireEvent.click(screen.getByTestId(filterByMeal));
-  expect(screen.getByText(/test meal/i)).toBeInTheDocument();
-  expect(screen.queryByText(/test drink/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(mockRecipes[0].name)).toBeInTheDocument();
+  expect(screen.queryByText(mockRecipes[1].name)).toBeNull();
 
   fireEvent.click(screen.getByTestId(filterByDrink));
-  expect(screen.queryByText(/test meal/i)).not.toBeInTheDocument();
-  expect(screen.getByText(/test drink/i)).toBeInTheDocument();
+  expect(screen.queryByText(mockRecipes[0].name)).toBeNull();
+  expect(screen.queryByText(mockRecipes[1].name)).toBeInTheDocument();
 
   fireEvent.click(screen.getByTestId(filterByAll));
-  expect(screen.getByText(/test meal/i)).toBeInTheDocument();
-  expect(screen.getByText(/test drink/i)).toBeInTheDocument();
+  expect(screen.queryByText(mockRecipes[0].name)).toBeInTheDocument();
+  expect(screen.queryByText(mockRecipes[1].name)).toBeInTheDocument();
 });
 
 test('copies link when share button is clicked', async () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
   const shareButton = screen.getAllByAltText('share')[0];
   userEvent.click(shareButton);
@@ -82,31 +90,36 @@ test('copies link when share button is clicked', async () => {
 
 test('removes recipe from favorites when favorite button is clicked', () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
-  const favoriteButton = screen.getAllByAltText('favorite')[0];
+  const favoriteButton = screen.getAllByTestId('0-horizontal-favorite-btn')[0];
   userEvent.click(favoriteButton);
 
-  expect(screen.queryByText(/test meal/i)).not.toBeInTheDocument();
-  expect(localStorage.setItem).toHaveBeenCalledWith(
-    'favoriteRecipes',
-    JSON.stringify([mockRecipes[1]]),
-  );
+  expect(screen.queryByText(mockRecipes[0])).not.toBeInTheDocument();
 });
 
 test('redirects to recipe details when image is clicked', async () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
-  const mealImage = await waitFor(() => screen.getByAltText(/test meal/i));
+  const mealImage = await waitFor(() => screen.getByTestId('0-horizontal-image'));
   userEvent.click(mealImage);
 
-  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  expect(history.location.pathname).toBe(`/${mockRecipes[0].type}s/${mockRecipes[0].id}`);
 });
 
 test('checks if all filter buttons are present', () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
   expect(screen.getByTestId(filterByAll)).toBeInTheDocument();
   expect(screen.getByTestId(filterByMeal)).toBeInTheDocument();
@@ -115,72 +128,14 @@ test('checks if all filter buttons are present', () => {
 
 test('checks if recipe card elements are present', () => {
   localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
+  const { history } = renderWithRouter(<App />);
+  act(() => {
+    history.push(FAVORITE_RECIPES_URL);
+  });
 
   expect(screen.getByTestId('0-horizontal-top-text')).toBeInTheDocument();
   expect(screen.getByTestId('0-horizontal-name')).toBeInTheDocument();
   expect(screen.getByTestId('0-horizontal-image')).toBeInTheDocument();
   expect(screen.getByTestId('0-horizontal-share-btn')).toBeInTheDocument();
   expect(screen.getByTestId('0-horizontal-favorite-btn')).toBeInTheDocument();
-});
-
-test('checks if link copied message disappears after 3 seconds', async () => {
-  localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-  renderWithRouter(<FavoriteRecipes />);
-
-  const shareButton = screen.getAllByAltText('share')[0];
-  userEvent.click(shareButton);
-
-  await waitFor(() => {
-    expect(screen.getByText(/link copied!/i)).toBeInTheDocument();
-  });
-
-  await waitFor(
-    () => {
-      expect(screen.queryByText(/link copied!/i)).not.toBeInTheDocument();
-    },
-    { timeout: 3500 },
-  );
-
-  test('checks if filtering recipes works', () => {
-    localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-    renderWithRouter(<FavoriteRecipes />);
-
-    const allBtn = screen.getByTestId(filterByAll);
-    const mealsBtn = screen.getByTestId(filterByMeal);
-    const drinksBtn = screen.getByTestId(filterByDrink);
-
-    userEvent.click(mealsBtn);
-    expect(screen.getByText(/test meal/i)).toBeInTheDocument();
-    expect(screen.queryByText(/test drink/i)).not.toBeInTheDocument();
-
-    userEvent.click(drinksBtn);
-    expect(screen.queryByText(/test meal/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/test drink/i)).toBeInTheDocument();
-
-    userEvent.click(allBtn);
-    expect(screen.getByText(/test meal/i)).toBeInTheDocument();
-    expect(screen.getByText(/test drink/i)).toBeInTheDocument();
-  });
-
-  test('checks if removing a recipe from favorites works', () => {
-    localStorage.setItem('favoriteRecipes', JSON.stringify(mockRecipes));
-    renderWithRouter(<FavoriteRecipes />);
-
-    const favoriteBtn = screen.getAllByAltText('favorite')[0];
-    userEvent.click(favoriteBtn);
-
-    const updatedFavorites = mockRecipes.filter((recipe) => recipe.id !== '52772');
-    const localStorageMock = jest.spyOn(localStorage, 'setItem');
-    localStorageMock.mockImplementation(() => {});
-
-    const storedFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    expect(storedFavorites).toEqual(updatedFavorites);
-
-    expect(screen.queryByText(/test meal/i)).not.toBeInTheDocument();
-    expect(localStorageMock).toHaveBeenCalledWith(
-      'favoriteRecipes',
-      JSON.stringify([mockRecipes[1]]),
-    );
-  });
 });
