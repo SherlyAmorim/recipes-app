@@ -78,7 +78,7 @@ function FavoriteRecipes() {
         <div className="favorite-recipes-grid">
           {filteredRecipes.map((recipe, index) => (
             <div className="recipe-card" key={ index }>
-              <Link to={ `/meals/${recipe.id}` }>
+              <Link to={ `/${recipe.type}s/${recipe.id}` }>
                 <img
                   className="recipe-image"
                   src={ recipe.image }
