@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import context from '../contexts/MyContext';
 import { mealApi, cockTailApi } from '../service/fetchAPI';
 
-export default function useSearch() {
+export default function useSearch(currentRecipes) {
+  const { setRecipesList } = useContext(context);
   const [searchInput, setSearchInput] = useState('');
   const [searchInformationRadio, setSearchInformationRadio] = useState('');
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState(currentRecipes || []);
 
   const history = useHistory();
   const { location } = history;
+
+  useEffect(() => {
+    if (recipes.length !== 0) {
+      setRecipesList(recipes);
+    }
+  }, [recipes, setRecipesList]);
 
   const redirectToDetailsPage = (data, route, id) => {
     if (data.length === 1) {
